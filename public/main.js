@@ -35,13 +35,17 @@ $(document).ready(function() {
 		})).appendTo($('#players'));
 	};
 
+	var removePlayer = function(id) {
+		$('#'+id).remove();
+	};
+
 	var playerHandsDown = function(id) {
 		$("#"+id+" .timer").css('color', '#32cd32');
 	};
 
 	var playerHandsUp = function(id) {
 		$("#"+id+" .timer").css('color', 'black');
-	}
+	};
 
 	/**
 	 *	Timer functions
@@ -65,7 +69,7 @@ $(document).ready(function() {
 			handsDown = true;
 			setTimeout(function() {
 				emitReady("me", handsDown);
-			}, 2000);
+			}, 1000);
 		}
 	});
 
@@ -88,6 +92,7 @@ $(document).ready(function() {
 	var initializeSocket = function(socket) {
 		socket.on('set scramble', setScramble);
 		socket.on('add player', addPlayer);
+		socket.on('remove player', removePlayer);
 		socket.on('hands down', playerHandsDown);
 		socket.on('hands up', playerHandsUp);
 	};

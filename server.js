@@ -48,6 +48,7 @@ io.on('connection', function(socket) {
 		if (index != -1) {
 			clients.splice(index, 1);
 		}
+		socket.broadcast.emit('remove player', socket.id);
 		console.log('closed connection', index);
 	});
 });
