@@ -18,9 +18,8 @@ var readyPlayers = 0;
 var timers = {};
 var activeTimers = {};
 
-// #D7DDDD (w), #D9FE01 (y)
-// #BF0916 (r), #FF4900 (o)
-// #012C7B (b), #01E230 (g)
+//y, r, o, b, g
+var colors = ["#D9FE01", "#BF0916", "#FF4900", "#012C7B", "#01E230"]
 
 /**
  *	On connect, show all current players to new player
@@ -28,7 +27,6 @@ var activeTimers = {};
 io.on('connection', function(socket) {
 	clients.push(socket);
 	timers[socket.id] = new timer();
-	
 	socket.emit('set player', socket.id);
 	for (var i=0; i<clients.length; i++) {
 		if (clients[i] === socket) { continue; }
@@ -41,7 +39,6 @@ io.on('connection', function(socket) {
 	 */
 	socket.on('new player', function(username) {
 		socket.emit('set scramble', currentScramble);
-		//socket.emit('add player', socket.id, username, true);
 		socket.broadcast.emit('add player', socket.id, username);
 		this.username = username;
 	});
@@ -67,7 +64,7 @@ io.on('connection', function(socket) {
 		timers[socket.id].start();
 		activeTimers[socket.id] = setInterval(function() {
 			io.emit('update timer', socket.id, timers[socket.id].time());
-		}, 2);
+		}, 100);
 		socket.broadcast.emit('hands up', socket.id);
 		console.log(socket.username, 'hands up', readyPlayers);
 	});
@@ -78,6 +75,7 @@ io.on('connection', function(socket) {
 	socket.on('stop timer', function() {
 		if (activeTimers[socket.id]) {
 			timers[socket.id].stop();
+			io.emit('update timer', socket.id, timers[socket.id].time());
 			clearInterval(activeTimers[socket.id]);
 		}
 	});
@@ -95,4 +93,4 @@ io.on('connection', function(socket) {
 	});
 });
 
-server.listen(8080);
+server.listen(process.env.PORT || 8080);

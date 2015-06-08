@@ -29,7 +29,7 @@ $(document).ready(function() {
 		$(".main").fadeIn();
 	};
 
-	var addPlayer = function(id, username, prepend) {
+	var addPlayer = function(id, username) {
 		var playerElement = jQuery("<div/>", {
 			class: "player", 
 		    id: id
