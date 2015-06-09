@@ -51,7 +51,8 @@ io.on('connection', function(socket) {
 		console.log(socket.username, 'hands down');
 		socket.broadcast.emit('hands down', socket.id);
 		if (clients.length === ++readyPlayers) {
-			console.log('Everyone is Ready!');
+			io.emit('ready');
+			console.log('Everyone is ready!');
 		}
 	});
 
@@ -61,12 +62,18 @@ io.on('connection', function(socket) {
 	 */
 	socket.on('hands up', function() {
 		--readyPlayers;
+		socket.broadcast.emit('hands up', socket.id);
+		console.log(socket.username, 'hands up', readyPlayers);
+	});
+
+	/**
+	 *	On start timer, start timer
+	 */
+	socket.on('start timer', function() {
 		timers[socket.id].start();
 		activeTimers[socket.id] = setInterval(function() {
 			io.emit('update timer', socket.id, timers[socket.id].time());
 		}, 100);
-		socket.broadcast.emit('hands up', socket.id);
-		console.log(socket.username, 'hands up', readyPlayers);
 	});
 
 	/**
@@ -77,6 +84,7 @@ io.on('connection', function(socket) {
 			timers[socket.id].stop();
 			io.emit('update timer', socket.id, timers[socket.id].time());
 			clearInterval(activeTimers[socket.id]);
+			socket.broadcast.emit('hands up', socket.id);
 		}
 	});
 
