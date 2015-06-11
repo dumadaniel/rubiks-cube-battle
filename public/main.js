@@ -24,7 +24,7 @@ $(document).ready(function() {
 		usernameInput.hide();
 	});
 
-	var setMainPlayer = function(id, username) {
+	var setMainPlayer = function(id) {
 		$(".main-player").attr("id", id);
 		$(".main").fadeIn();
 	};
@@ -60,15 +60,21 @@ $(document).ready(function() {
 		$("#"+id+" .timer").css('color', 'black');
 	};
 
+	var showMessage = function(msg) {
+		$(".message").text(msg);
+	};
+
 	/**
 	 *	Timer functions
 	 */
 
 	var handsDown = false;
 	var ready = false;
+	var allReady = false;
 	var timerActive = false;
 	var emitHandsDown = function(id, down) {
 		if (down) {
+			ready = true;
 			playerHandsDown(id);
 			socket.emit('hands down');
 		}
@@ -96,15 +102,16 @@ $(document).ready(function() {
 		if (event.keyCode != 32) { return; }
 
 		if (socket) {
-			if (handsDown) {
-				handsDown = false;
+			handsDown = false;
+			playerHandsUp(socket.id);
+
+			if (ready && !allReady) {
+				ready = false;
 				socket.emit('hands up');
 			}
-			
-			playerHandsUp(socket.id);
-			
-			if (ready) {
+			else if (ready && allReady) {
 				ready = false;
+				allReady = false;
 				timerActive = true;
 				socket.emit('start timer');
 			}
@@ -116,8 +123,9 @@ $(document).ready(function() {
 		$("#"+id+" .timer").text(time);
 	};
 
-	var readyAll = function() {
-		ready = true;
+	var setAllReady = function() {
+		allReady = true;
+		$(".message").text("");
 		$(".timer").text('Ready').css('color', '#32cd32');
 	};
 
@@ -132,6 +140,7 @@ $(document).ready(function() {
 		socket.on('hands down', playerHandsDown);
 		socket.on('hands up', playerHandsUp);
 		socket.on('update timer', updateTimer);
-		socket.on('ready', readyAll);
+		socket.on('all ready', setAllReady);
+		socket.on('show message', showMessage);
 	};
 });

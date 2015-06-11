@@ -51,7 +51,7 @@ io.on('connection', function(socket) {
 		console.log(socket.username, 'hands down');
 		socket.broadcast.emit('hands down', socket.id);
 		if (clients.length === ++readyPlayers) {
-			io.emit('ready');
+			io.emit('all ready');
 			console.log('Everyone is ready!');
 		}
 	});
@@ -70,6 +70,7 @@ io.on('connection', function(socket) {
 	 *	On start timer, start timer
 	 */
 	socket.on('start timer', function() {
+		--readyPlayers;
 		timers[socket.id].start();
 		activeTimers[socket.id] = setInterval(function() {
 			io.emit('update timer', socket.id, timers[socket.id].time());
@@ -85,6 +86,21 @@ io.on('connection', function(socket) {
 			io.emit('update timer', socket.id, timers[socket.id].time());
 			clearInterval(activeTimers[socket.id]);
 			socket.broadcast.emit('hands up', socket.id);
+
+			delete activeTimers[socket.id];
+			if (Object.keys(activeTimers).length === 0) {
+				currentScramble = scrambler["333"].getRandomScramble().scramble_string;
+				io.emit('set scramble', currentScramble);
+
+				var winner = clients[0].id;
+				for (var i=1; i<clients.length; i++) {
+					if (timers[clients[i].id].time(true) < timers[winner].time(true)) {
+						winner = clients[i].id;
+					}
+				}
+				io.emit('show message', io.sockets.connected[winner].username + " (" + timers[winner].time() + ") wins!");
+				console.log(io.sockets.connected[winner].username + " (" + timers[winner].time() + ") wins!");
+			}
 		}
 	});
 
@@ -95,6 +111,9 @@ io.on('connection', function(socket) {
 		var index = clients.indexOf(socket);
 		if (index != -1) {
 			clients.splice(index, 1);
+		}
+		if (timers.hasOwnProperty(socket.id)) {
+			delete timers[socket.id];
 		}
 		socket.broadcast.emit('remove player', socket.id);
 		console.log('closed connection', index);
