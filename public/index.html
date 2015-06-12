@@ -12,9 +12,14 @@
   </head>
 
   <body>
-
     <div class="container">
       <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="#" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<p>Press and hold the spacebar to indicate you are ready.</p><p>When all players are ready, release the spacebar to start your timer.</p><p>Good luck!</p>"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+            <li class="profile-button" data-toggle="modal" data-target="#profile"><a href="#"></a></li>
+          </ul>
+        </nav>
         <div class="input-group pull-right">
           <input id="username" type="text" class="form-control" placeholder="Enter your username">
         </div>
@@ -27,11 +32,8 @@
           <h1 class="timer">00:00.000</h1>
           <p class="name"></p>
         </div>
-
         <div class="row message"></div>
-
         <div class="row scramble"></div>
-
         <div class="row marketing">
           <div class="col-lg-12 players"></div>
         </div>
@@ -43,9 +45,56 @@
 
     </div> <!-- /container -->
 
+    <div id="profile" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            <h1 class="modal-title profile-header">Username</h1>
+          </div>
+          <div class="modal-body">
+            <div class="row profile-statistics">
+              <div class="col-xs-6 headers">
+                <h4>Fastest time:</h4>
+                <h4>Overall average:</h4>
+              </div>
+              <div class="col-xs-6 values">
+                <h4>0:10.000</h4>
+                <h4>0:15.000</h4>
+              </div>
+            </div>
+            <hr>
+            <div class="container-fluid profile-history">
+              <div class="row">
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+                <div class="col-xs-2">0:10.00</div>
+              </div>
+            </div>
+          </div><!-- /.modal-body -->
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <!-- JS -->
     <script src="//code.jquery.com/jquery-2.1.0.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="main.js"></script>
   </body>
 </html>

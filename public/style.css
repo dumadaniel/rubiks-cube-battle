@@ -30,6 +30,23 @@
   padding-right: 8px;
 }
 
+.nav {
+  display: none;
+}
+
+.profile-statistics .headers {
+  text-align: right;
+}
+
+.profile-history {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tooltip-inner {
+    width: 275px;
+}
+
 /* Space out content a bit */
 body {
   padding-top: 20px;

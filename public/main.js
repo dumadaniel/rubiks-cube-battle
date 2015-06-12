@@ -4,6 +4,10 @@ $(document).ready(function() {
 	var usernameInput = $('#username');
 	usernameInput.focus();
 
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	})
+
 	var setScramble = function(newScramble) {
 		$('.scramble').text(newScramble);
 	};
@@ -20,8 +24,10 @@ $(document).ready(function() {
 		socket.emit('new player', usernameInput.val());
 
 		$(".main-player .name").text(usernameInput.val());
+		$(".profile-button a").text(usernameInput.val());
 		usernameInput.val('');
 		usernameInput.hide();
+		$(".nav").fadeIn();
 	});
 
 	var setMainPlayer = function(id) {
